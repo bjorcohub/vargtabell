@@ -2,12 +2,12 @@ import streamlit as st
 from collections import defaultdict
 import re
 
-st.title("VARG City Organizer and Bullet Calculator")
+st.title("VARG Organizer & Bullet Calculator")
 
-search_input = st.text_area("Paste your VARG search here:", height=200)
-table_input = st.text_area("Paste your organized table here:", height=200)
+input_text = st.text_area("Paste your VARG data here:", height=300)
+output_text = ""
 
-# Organizer logic (already working)
+# Organizer logic
 def organize_varg_search(input_text):
     city_vargs = defaultdict(list)
     for line in input_text.splitlines():
@@ -41,7 +41,7 @@ def calculate_bullets(rank):
         return 125000
     return 0
 
-# Bullet converter now reading VARG number directly
+# Bullet converter logic
 def convert_table_with_bullets(input_text):
     bullet_output = ""
     total_bullets = 0
@@ -60,20 +60,22 @@ def convert_table_with_bullets(input_text):
     bullet_output += f"Total Bullets: {total_bullets}\n"
     return bullet_output
 
-# Organizer button
-if st.button("Organize VARG Search"):
-    if search_input:
-        organized_output = organize_varg_search(search_input)
-        st.text_area("Organized VARGs:", organized_output, height=400)
-        st.download_button("Download Organized VARGs", organized_output.encode("utf-8"), "organized_vargs.txt")
-    else:
-        st.warning("Please enter a VARG search.")
+col1, col2 = st.columns(2)
 
-# Converter button
-if st.button("Convert Table to Include Bullets"):
-    if table_input:
-        bullet_output = convert_table_with_bullets(table_input)
-        st.text_area("Bullet-Converted Table:", bullet_output, height=400)
-        st.download_button("Download Bullet-Converted Table", bullet_output.encode("utf-8"), "bullet_table.txt")
-    else:
-        st.warning("Please enter an organized table.")
+with col1:
+    if st.button("Organize Search"):
+        if input_text:
+            output_text = organize_varg_search(input_text)
+        else:
+            st.warning("Please paste your VARG data.")
+
+with col2:
+    if st.button("Convert to Bullets"):
+        if input_text:
+            output_text = convert_table_with_bullets(input_text)
+        else:
+            st.warning("Please paste your VARG data.")
+
+if output_text:
+    st.text_area("Output:", output_text, height=400)
+    st.download_button("Download Output", output_text.encode("utf-8"), "output.txt")
