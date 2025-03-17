@@ -4,7 +4,7 @@ import re
 
 st.title("VARG Organizer & Bullet Calculator")
 
-input_text = st.text_area("Paste your VARG data here:", height=300)
+input_text = st.text_area("Lim inn Vargsøk/Vargtabell her:", height=300)
 output_text = ""
 
 # Organizer logic
@@ -63,14 +63,14 @@ def convert_table_with_bullets(input_text):
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("Organize Search"):
+    if st.button("Organiser Søk"):
         if input_text:
             output_text = organize_varg_search(input_text)
         else:
             st.warning("Please paste your VARG data.")
 
 with col2:
-    if st.button("Convert to Bullets"):
+    if st.button("Legg til antall kuler"):
         if input_text:
             output_text = convert_table_with_bullets(input_text)
         else:
