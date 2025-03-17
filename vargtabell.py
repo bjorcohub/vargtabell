@@ -56,8 +56,6 @@ def convert_table_with_bullets(input_text):
             bullet_output += f"{varg} {bullets}\n"
         else:
             bullet_output += f"{line}\n"
-
-    bullet_output += f"Total Bullets: {total_bullets}\n"
     return bullet_output
 
 col1, col2 = st.columns(2)
