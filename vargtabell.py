@@ -4,11 +4,10 @@ import re
 
 st.title("VARG City Organizer and Bullet Calculator")
 
-# Input fields for both modes
 search_input = st.text_area("Paste your VARG search here:", height=200)
 table_input = st.text_area("Paste your organized table here:", height=200)
 
-# Function to organize VARG search
+# Organizer logic (already working)
 def organize_varg_search(input_text):
     city_vargs = defaultdict(list)
     for line in input_text.splitlines():
@@ -26,7 +25,7 @@ def organize_varg_search(input_text):
         organized_output += "- - -\n"
     return organized_output
 
-# Function to calculate bullets based on rank
+# Bullet calculation logic
 def calculate_bullets(rank):
     if 1 <= rank <= 58:
         return 16000
@@ -42,24 +41,26 @@ def calculate_bullets(rank):
         return 125000
     return 0
 
-# Function to add bullets to an organized table
+# Bullet converter now reading VARG number directly
 def convert_table_with_bullets(input_text):
     bullet_output = ""
     total_bullets = 0
+
     for line in input_text.splitlines():
-        match = re.match(r"^(VARG\d+)\s+(\d+)", line)
+        match = re.match(r"^(VARG(\d+))", line)
         if match:
-            varg_name = match.group(1)
-            varg_rank = int(match.group(2))
-            bullets = calculate_bullets(varg_rank)
+            varg = match.group(1)
+            rank_number = int(match.group(2))
+            bullets = calculate_bullets(rank_number)
             total_bullets += bullets
-            bullet_output += f"{varg_name} {varg_rank} - {bullets} bullets\n"
+            bullet_output += f"{varg} {bullets}\n"
         else:
             bullet_output += f"{line}\n"
+
     bullet_output += f"Total Bullets: {total_bullets}\n"
     return bullet_output
 
-# Button to organize VARG search
+# Organizer button
 if st.button("Organize VARG Search"):
     if search_input:
         organized_output = organize_varg_search(search_input)
@@ -68,7 +69,7 @@ if st.button("Organize VARG Search"):
     else:
         st.warning("Please enter a VARG search.")
 
-# Button to convert organized table to include bullets
+# Converter button
 if st.button("Convert Table to Include Bullets"):
     if table_input:
         bullet_output = convert_table_with_bullets(table_input)
