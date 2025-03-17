@@ -76,7 +76,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.button("Organiser Søk", on_click=handle_organize)
 with col2:
-    st.button("Legg til Kuler(varg)", on_click=handle_convert)
+    st.button("Legg til Kuler(Varg)", on_click=handle_convert)
 
 if st.session_state.output_text:
     st.text_area("Output:", st.session_state.output_text, height=400)
