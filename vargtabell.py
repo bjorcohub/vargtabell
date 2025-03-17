@@ -28,7 +28,7 @@ def calculate_bullets(input_text):
             try:
                 rank_number = int(line[4:])
                 rank, bullets = get_rank_and_bullets(rank_number)
-                output.append(f"{line}: {rank} - {bullets} bullets")
+                output.append(f"{line}: {bullets}")
             except ValueError:
                 output.append(f"{line}: Invalid rank number")
         else:
