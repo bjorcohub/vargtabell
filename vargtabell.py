@@ -2,7 +2,7 @@ import streamlit as st
 from collections import defaultdict
 import re
 
-st.title("VARG & Player Organizer + Bullet Calculator")
+st.title("Søk Organiserer Og Vargkuler")
 
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
@@ -25,7 +25,7 @@ def organize_search(input_text):
         organized_output += f"{city}:\n"
         for name in sorted(names):
             organized_output += f"{name}\n"
-        organized_output += "- - -\n"
+        organized_output += "\n"
     return organized_output
 
 # Bullet calculation logic
@@ -60,7 +60,6 @@ def convert_table_with_bullets(input_text):
         else:
             bullet_output += f"{line}\n"
 
-    bullet_output += f"Total Bullets: {total_bullets}\n"
     return bullet_output
 
 # Callback functions
@@ -75,9 +74,9 @@ st.text_area("Paste your search data here:", key="input_text", height=300)
 
 col1, col2 = st.columns(2)
 with col1:
-    st.button("Organize Search", on_click=handle_organize)
+    st.button("Organiser Søk", on_click=handle_organize)
 with col2:
-    st.button("Convert to Bullets", on_click=handle_convert)
+    st.button("Legg til Kuler(varg)", on_click=handle_convert)
 
 if st.session_state.output_text:
     st.text_area("Output:", st.session_state.output_text, height=400)
