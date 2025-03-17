@@ -6,10 +6,8 @@ st.title("VARG Organizer & Bullet Calculator")
 
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
-
-# The input field is bound to session state
-st.text_area("Paste your VARG data here:", key="input_text", height=300)
-output_text = ""
+if "output_text" not in st.session_state:
+    st.session_state.output_text = ""
 
 # Organizer logic
 def organize_varg_search(input_text):
@@ -64,22 +62,22 @@ def convert_table_with_bullets(input_text):
     bullet_output += f"Total Bullets: {total_bullets}\n"
     return bullet_output
 
+# Callback functions
+def handle_organize():
+    st.session_state.input_text = organize_varg_search(st.session_state.input_text)
+
+def handle_convert():
+    st.session_state.output_text = convert_table_with_bullets(st.session_state.input_text)
+
+# Layout
+st.text_area("Paste your VARG data here:", key="input_text", height=300)
+
 col1, col2 = st.columns(2)
-
 with col1:
-    if st.button("Organize Search"):
-        if st.session_state.input_text:
-            st.session_state.input_text = organize_varg_search(st.session_state.input_text)
-        else:
-            st.warning("Please paste your VARG data.")
-
+    st.button("Organize Search", on_click=handle_organize)
 with col2:
-    if st.button("Convert to Bullets"):
-        if st.session_state.input_text:
-            output_text = convert_table_with_bullets(st.session_state.input_text)
-        else:
-            st.warning("Please paste your VARG data.")
+    st.button("Convert to Bullets", on_click=handle_convert)
 
-if output_text:
-    st.text_area("Output:", output_text, height=400)
-    st.download_button("Download Output", output_text.encode("utf-8"), "output.txt")
+if st.session_state.output_text:
+    st.text_area("Output:", st.session_state.output_text, height=400)
+    st.download_button("Download Output", st.session_state.output_text.encode("utf-8"), "output.txt")
