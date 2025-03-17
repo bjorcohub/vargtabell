@@ -2,28 +2,29 @@ import streamlit as st
 from collections import defaultdict
 import re
 
-st.title("Vargsøk organiserer & Kulekonverterer")
+st.title("VARG & Player Organizer + Bullet Calculator")
 
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
 if "output_text" not in st.session_state:
     st.session_state.output_text = ""
 
-# Organizer logic
-def organize_varg_search(input_text):
-    city_vargs = defaultdict(list)
+# Organizer logic that handles both VARGs and usernames
+def organize_search(input_text):
+    city_entries = defaultdict(list)
     for line in input_text.splitlines():
-        match = re.match(r"^(VARG\d+)\s+([A-Za-zÆØÅæøå]+)", line)
+        # Match both VARG and usernames with city
+        match = re.match(r"^(\S+)\s+([A-Za-zÆØÅæøå]+)\s", line)
         if match:
-            varg_number = match.group(1)
-            city_name = match.group(2)
-            city_vargs[city_name].append(varg_number)
+            name = match.group(1)
+            city = match.group(2)
+            city_entries[city].append(name)
 
     organized_output = ""
-    for city, vargs in sorted(city_vargs.items()):
+    for city, names in sorted(city_entries.items()):
         organized_output += f"{city}:\n"
-        for varg in sorted(vargs):
-            organized_output += f"{varg}\n"
+        for name in sorted(names):
+            organized_output += f"{name}\n"
         organized_output += "- - -\n"
     return organized_output
 
@@ -43,7 +44,7 @@ def calculate_bullets(rank):
         return 125000
     return 0
 
-# Bullet converter logic
+# Bullet converter logic (only affects VARGs)
 def convert_table_with_bullets(input_text):
     bullet_output = ""
     total_bullets = 0
@@ -59,23 +60,24 @@ def convert_table_with_bullets(input_text):
         else:
             bullet_output += f"{line}\n"
 
+    bullet_output += f"Total Bullets: {total_bullets}\n"
     return bullet_output
 
 # Callback functions
 def handle_organize():
-    st.session_state.input_text = organize_varg_search(st.session_state.input_text)
+    st.session_state.input_text = organize_search(st.session_state.input_text)
 
 def handle_convert():
     st.session_state.output_text = convert_table_with_bullets(st.session_state.input_text)
 
 # Layout
-st.text_area("Lim inn Vargsøk/Tabell:", key="input_text", height=300)
+st.text_area("Paste your search data here:", key="input_text", height=300)
 
 col1, col2 = st.columns(2)
 with col1:
-    st.button("Organiser Søk", on_click=handle_organize)
+    st.button("Organize Search", on_click=handle_organize)
 with col2:
-    st.button("Legg Til Kuler", on_click=handle_convert)
+    st.button("Convert to Bullets", on_click=handle_convert)
 
 if st.session_state.output_text:
     st.text_area("Output:", st.session_state.output_text, height=400)
