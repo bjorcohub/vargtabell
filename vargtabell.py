@@ -70,7 +70,7 @@ def handle_convert():
     st.session_state.output_text = convert_table_with_bullets(st.session_state.input_text)
 
 # Layout
-st.text_area("Paste your search data here:", key="input_text", height=300)
+st.text_area("Lim inn Søkdata her:", key="input_text", height=300)
 
 col1, col2 = st.columns(2)
 with col1:
