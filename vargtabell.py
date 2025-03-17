@@ -1,51 +1,38 @@
 import streamlit as st
+from collections import defaultdict
+import re
 
-def get_rank_and_bullets(rank_number):
-    if 1 <= rank_number <= 58:
-        return "Wannabe", 16000
-    elif 59 <= rank_number <= 106:
-        return "Bråkmaker", 25000
-    elif 107 <= rank_number <= 144:
-        return "Gangster", 45000
-    elif 145 <= rank_number <= 172:
-        return "Hitman", 65000
-    elif 173 <= rank_number <= 191:
-        return "Assassin", 90000
-    elif 192 <= rank_number <= 200:
-        return "Kaptein", 125000
-    return "Sivilist", 10500
+st.title("VARG City Organizer")
 
+# Input text area
+input_text = st.text_area("Paste your VARG list here:", height=400)
 
-def calculate_bullets(input_text):
-    output = []
-    lines = input_text.strip().splitlines()
-    city_name = ""
-    for line in lines:
-        if line.isalpha():  # City name
-            city_name = line
-            output.append(f"{city_name}")
-        elif line.startswith("VARG"):
-            try:
-                rank_number = int(line[4:])
-                rank, bullets = get_rank_and_bullets(rank_number)
-                output.append(f"{line} {bullets}")
-            except ValueError:
-                output.append(f"{line}: Invalid rank number")
-        else:
-            output.append(line)
-    return "\n".join(output)
-
-
-# Streamlit UI
-title = "VARG Bullet Calculator"
-st.title(title)
-
-st.write("Paste your VARG list below and click the button to calculate bullets:")
-
-input_text = st.text_area("VARG List")
-if st.button("Calculate Bullets"):
+if st.button("Organize VARGs"):
     if input_text:
-        result = calculate_bullets(input_text)
-        st.text_area("Bullet Calculation Result", result, height=300)
+        # Dictionary to hold cities and their VARG numbers
+        city_vargs = defaultdict(list)
+
+        # Process each line
+        for line in input_text.splitlines():
+            # Match the line format for the new search list
+            match = re.match(r"^(VARG\d+)\s+([A-Za-zÆØÅæøå]+)", line)
+            if match:
+                varg_number = match.group(1)
+                city_name = match.group(2)
+                city_vargs[city_name].append(varg_number)
+
+        # Display results
+        organized_output = ""
+        for city, vargs in sorted(city_vargs.items()):
+            organized_output += f"{city}:\n"
+            for varg in sorted(vargs):
+                organized_output += f"{varg}\n"
+            organized_output += "- - -\n"
+
+        # Output the organized list
+        st.text_area("Organized VARGs:", organized_output, height=400)
+        
+        # Option to download the organized list
+        st.download_button("Download Organized VARGs", organized_output.encode("utf-8"), "organized_vargs.txt")
     else:
-        st.warning("Please enter your VARG list.")
+        st.warning("Please enter a VARG list.")
