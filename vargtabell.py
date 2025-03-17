@@ -2,7 +2,7 @@ import streamlit as st
 from collections import defaultdict
 import re
 
-st.title("VARG Organizer & Bullet Calculator")
+st.title("Vargsøk organiserer & Kulekonverterer")
 
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
@@ -59,7 +59,6 @@ def convert_table_with_bullets(input_text):
         else:
             bullet_output += f"{line}\n"
 
-    bullet_output += f"Total Bullets: {total_bullets}\n"
     return bullet_output
 
 # Callback functions
@@ -70,13 +69,13 @@ def handle_convert():
     st.session_state.output_text = convert_table_with_bullets(st.session_state.input_text)
 
 # Layout
-st.text_area("Paste your VARG data here:", key="input_text", height=300)
+st.text_area("Lim inn Vargsøk/Tabell:", key="input_text", height=300)
 
 col1, col2 = st.columns(2)
 with col1:
-    st.button("Organize Search", on_click=handle_organize)
+    st.button("Organiser Søk", on_click=handle_organize)
 with col2:
-    st.button("Convert to Bullets", on_click=handle_convert)
+    st.button("Legg Til Kuler", on_click=handle_convert)
 
 if st.session_state.output_text:
     st.text_area("Output:", st.session_state.output_text, height=400)
