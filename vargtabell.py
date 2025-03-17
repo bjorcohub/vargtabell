@@ -7,7 +7,8 @@ st.title("VARG Organizer & Bullet Calculator")
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
 
-input_text = st.text_area("Paste your VARG data here:", value=st.session_state.input_text, height=300)
+# The input field is bound to session state
+st.text_area("Paste your VARG data here:", key="input_text", height=300)
 output_text = ""
 
 # Organizer logic
@@ -67,17 +68,15 @@ col1, col2 = st.columns(2)
 
 with col1:
     if st.button("Organize Search"):
-        if input_text:
-            organized_output = organize_varg_search(input_text)
-            st.session_state.input_text = organized_output
-            st.experimental_rerun()
+        if st.session_state.input_text:
+            st.session_state.input_text = organize_varg_search(st.session_state.input_text)
         else:
             st.warning("Please paste your VARG data.")
 
 with col2:
     if st.button("Convert to Bullets"):
-        if input_text:
-            output_text = convert_table_with_bullets(input_text)
+        if st.session_state.input_text:
+            output_text = convert_table_with_bullets(st.session_state.input_text)
         else:
             st.warning("Please paste your VARG data.")
 
